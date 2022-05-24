@@ -27,7 +27,7 @@
 #include <cassert>
 #include <cstddef>
 #include <cstring>
-
+#include <stdexcept>
 // TODO DenseMatrix should not be concerned about CUDA.
 
 /**
@@ -109,8 +109,10 @@ class DenseMatrix : public Matrix<ValueType>
     ~DenseMatrix() override = default;
 
     [[nodiscard]] size_t pos(size_t rowIdx, size_t colIdx) const {
-        assert((rowIdx < numRows) && "rowIdx is out of bounds");
-        assert((colIdx < numCols) && "colIdx is out of bounds");
+        if(rowIdx >= numRows)
+            throw std::runtime_error("rowIdx is out of bounds");
+        if(colIdx >= numCols)
+            throw std::runtime_error("colIdx is out of bounds");
         return rowIdx * rowSkip + colIdx;
     }
     
@@ -408,8 +410,10 @@ class DenseMatrix<const char*> : public Matrix<const char*>
     ~DenseMatrix() override = default;
 
     [[nodiscard]] size_t pos(size_t rowIdx, size_t colIdx) const {
-        assert((rowIdx < numRows) && "rowIdx is out of bounds");
-        assert((colIdx < numCols) && "colIdx is out of bounds");
+        if(rowIdx >= numRows)
+            throw std::runtime_error("rowIdx is out of bounds");
+        if(colIdx >= numCols)
+            throw std::runtime_error("colIdx is out of bounds");
         return rowIdx * rowSkip + colIdx;
     }
     
